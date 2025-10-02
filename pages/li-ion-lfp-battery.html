@@ -9,7 +9,7 @@
     <!-- External Stylesheets -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/style.css">
-    
+     <link rel="stylesheet" href="../css/quition.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -498,6 +498,25 @@
             </div>
         </section>
     </main>
+
+  <div style="text-align: center; margin: 40px 0;">
+    <button onclick="showBatteryPackQuestions()" style="background: linear-gradient(45deg, #ff6b35, #ff4500); color: white; padding: 15px 30px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.3s ease; font-weight: 600;">
+      🔋 Help Me Choose Battery Pack Solution
+    </button>
+  </div>
+
+  <!-- Modal -->
+  <div id="quizModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="quizTitle"></h2>
+      <form id="quizForm"></form>
+      <button type="button" onclick="submitAnswers()">Submit</button>
+    </div>
+  </div>
+<script src="../js/qutions.js"></script>
+
+
 
     <!-- Contact Popup Modal -->
     <div id="official-popup-modal" class="popup-modal" style="display: none;">

@@ -13,6 +13,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../css/quition.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         /* Hero Section */
@@ -679,6 +680,24 @@
         </section>
 
     </main>
+  <div style="text-align: center; margin: 40px 0;">
+    <button onclick="showPOSQuestions()" style="background: linear-gradient(45deg, #ff6b35, #ff4500); color: white; padding: 15px 30px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.3s ease; font-weight: 600;">
+      🛒 Help Me Choose Point of Sale Solution
+    </button>
+  </div>
+
+  <!-- Modal -->
+  <div id="quizModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="quizTitle"></h2>
+      <form id="quizForm"></form>
+      <button type="button" onclick="submitAnswers()">Submit</button>
+    </div>
+  </div>
+<script src="../js/qutions.js"></script>
+
+
 
     <!-- Go Official Popup Modal -->
     <div id="official-popup-modal" class="popup-modal" style="display: none;">

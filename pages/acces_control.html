@@ -14,6 +14,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+   <link rel="stylesheet" href="../css/quition.css">
     <style>
         /* Hero Section */
         .hero-section {
@@ -518,6 +520,35 @@
             </div>
         </section>
     </main>
+
+
+
+
+
+
+
+  <div style="text-align: center; margin: 40px 0;">
+    <button onclick="showAccessControlQuestions()" class="question-button">
+      🔒 Help Me Choose Access Control Solution
+    </button>
+  </div>
+
+  <!-- Modal -->
+  <div id="quizModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="quizTitle"></h2>
+      <form id="quizForm"></form>
+      <button type="button" onclick="submitAnswers()">Submit</button>
+    </div>
+  </div>
+<script src="../js/qutions.js"></script>
+
+
+
+
+
+
 
     <!-- Contact Popup Modal -->
     <div id="official-popup-modal" class="popup-modal" style="display: none;">
