@@ -142,6 +142,11 @@ function showBatteryPacksQuestions() {
   loadQuiz("Find Your Battery Solution", questions);
 }
 
+// Alias function for backward compatibility
+function showBatteryPackQuestions() {
+  showBatteryPacksQuestions();
+}
+
 // Function for Digital Signage questions
 function showDigitalSignageQuestions() {
   const questions = [
@@ -163,10 +168,31 @@ function loadQuiz(title, questions) {
   document.getElementById("quizTitle").innerText = title;
   const form = document.getElementById("quizForm");
   form.innerHTML = "";
+  
+  // Add user info fields at the top
+  const userInfoDiv = document.createElement("div");
+  userInfoDiv.className = "user-info-section";
+  userInfoDiv.innerHTML = `
+    <div class="question">
+      <p><strong>Your Information (Required)</strong></p>
+      <div style="margin-bottom: 15px;">
+        <label for="userName">Name *</label>
+        <input type="text" id="userName" name="userName" required style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; margin-top: 5px;">
+      </div>
+      <div style="margin-bottom: 20px;">
+        <label for="userMobile">Mobile Number *</label>
+        <input type="tel" id="userMobile" name="userMobile" required pattern="[0-9]{10}" maxlength="10" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; margin-top: 5px;" placeholder="Enter 10-digit mobile number">
+      </div>
+      <hr style="margin: 20px 0; border: 1px solid #eee;">
+    </div>
+  `;
+  form.appendChild(userInfoDiv);
+  
+  // Add quiz questions
   questions.forEach((item, i) => {
     const div = document.createElement("div");
     div.className = "question";
-    let opts = `<select name="q${i}"><option value="">--Select an answer--</option>`;
+    let opts = `<select name="q${i}" data-question="${item.q}"><option value="">--Select an answer--</option>`;
     item.options.forEach(opt => {
       opts += `<option value="${opt}">${opt}</option>`;
     });
@@ -174,6 +200,11 @@ function loadQuiz(title, questions) {
     div.innerHTML = `<p>${i+1}. ${item.q}</p>${opts}`;
     form.appendChild(div);
   });
+  
+  // Store quiz type and title for submission
+  form.setAttribute('data-quiz-type', title.replace('Find Your ', '').replace(' Solution', ''));
+  form.setAttribute('data-quiz-title', title);
+  
   document.getElementById("quizModal").style.display = "flex";
 }
 
@@ -183,12 +214,68 @@ function closeModal() {
 
 function submitAnswers() {
   const form = document.getElementById("quizForm");
-  let answers = [];
+  const userName = document.getElementById("userName").value.trim();
+  const userMobile = document.getElementById("userMobile").value.trim();
+  
+  // Validate user info
+  if (!userName) {
+    alert("Please enter your name");
+    document.getElementById("userName").focus();
+    return;
+  }
+  
+  if (!userMobile || userMobile.length !== 10 || !/^\d{10}$/.test(userMobile)) {
+    alert("Please enter a valid 10-digit mobile number");
+    document.getElementById("userMobile").focus();
+    return;
+  }
+  
+  // Collect quiz data
+  const quizType = form.getAttribute('data-quiz-type');
+  const quizTitle = form.getAttribute('data-quiz-title');
+  
+  const formData = new FormData();
+  formData.append('name', userName);
+  formData.append('mobile', userMobile);
+  formData.append('quiz_type', quizType);
+  formData.append('quiz_title', quizTitle);
+  
+  // Collect questions and answers
   [...form.elements].forEach(el => {
-    if (el.tagName === "SELECT") {
-      answers.push(el.value || "Not answered");
+    if (el.tagName === "SELECT" && el.name.startsWith('q')) {
+      const questionText = el.getAttribute('data-question');
+      const answer = el.value || "Not answered";
+      formData.append(el.name + '_question', questionText);
+      formData.append(el.name + '_answer', answer);
     }
   });
-  alert("Your Answers:\n" + answers.join("\n"));
-  closeModal();
+  
+  // Submit to backend (detect correct path)
+  const currentPath = window.location.pathname;
+  const backendPath = currentPath.includes('/pages/') ? '../backend/save_quiz_response.php' : 'backend/save_quiz_response.php';
+  
+  fetch(backendPath, {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    console.log('Response status:', response.status);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Response data:', data);
+    if (data.success) {
+      alert("Thank you! Your quiz response has been saved successfully.\nOur team will contact you soon on " + userMobile);
+      closeModal();
+    } else {
+      alert("Error saving response: " + (data.message || "Please try again"));
+    }
+  })
+  .catch(error => {
+    console.error('Detailed Error:', error);
+    alert("Error: " + error.message + "\nPlease check the browser console for more details.");
+  });
 }

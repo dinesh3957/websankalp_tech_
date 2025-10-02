@@ -81,31 +81,31 @@ try {
     $contact_error = 'Error fetching contact data: ' . $e->getMessage();
 }
 
-// Fetch product inquiries
+// Fetch quiz responses
 try {
-    $checkInquiryTable = $pdo->query("SHOW TABLES LIKE 'product_inquiries'");
-    $inquiryTableExists = $checkInquiryTable->rowCount() > 0;
+    $checkQuizTable = $pdo->query("SHOW TABLES LIKE 'quiz_responses'");
+    $quizTableExists = $checkQuizTable->rowCount() > 0;
     
-    if ($inquiryTableExists) {
-        $inquiryQuery = "SELECT * FROM product_inquiries $whereClause ORDER BY created_at DESC";
-        $inquiryStmt = $pdo->prepare($inquiryQuery);
-        $inquiryStmt->execute($params);
-        $productInquiries = $inquiryStmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($quizTableExists) {
+        $quizQuery = "SELECT * FROM quiz_responses $whereClause ORDER BY created_at DESC";
+        $quizStmt = $pdo->prepare($quizQuery);
+        $quizStmt->execute($params);
+        $quizResponses = $quizStmt->fetchAll(PDO::FETCH_ASSOC);
         
         // Get total count
-        $inquiryCountQuery = "SELECT COUNT(*) as total FROM product_inquiries $whereClause";
-        $inquiryCountStmt = $pdo->prepare($inquiryCountQuery);
-        $inquiryCountStmt->execute($params);
-        $totalInquiries = $inquiryCountStmt->fetch(PDO::FETCH_ASSOC)['total'];
+        $quizCountQuery = "SELECT COUNT(*) as total FROM quiz_responses $whereClause";
+        $quizCountStmt = $pdo->prepare($quizCountQuery);
+        $quizCountStmt->execute($params);
+        $totalQuizResponses = $quizCountStmt->fetch(PDO::FETCH_ASSOC)['total'];
     } else {
-        $productInquiries = [];
-        $totalInquiries = 0;
-        $inquiry_error = 'Product inquiries table not found. Please run the SQL command first.';
+        $quizResponses = [];
+        $totalQuizResponses = 0;
+        $quiz_error = 'Quiz responses table not found. Please run the SQL command first.';
     }
 } catch (PDOException $e) {
-    $productInquiries = [];
-    $totalInquiries = 0;
-    $inquiry_error = 'Error fetching inquiry data: ' . $e->getMessage();
+    $quizResponses = [];
+    $totalQuizResponses = 0;
+    $quiz_error = 'Error fetching quiz data: ' . $e->getMessage();
 }
 ?>
 <!DOCTYPE html>
@@ -155,6 +155,16 @@ try {
 
         .navbar h1 {
             font-size: 24px;
+        }
+
+        .navbar-logo {
+            height: 40px;
+            margin-right: 15px;
+            transition: transform 0.2s ease;
+        }
+
+        .navbar-logo:hover {
+            transform: scale(1.05);
         }
 
         .user-info {
@@ -493,6 +503,113 @@ try {
             display: block;
         }
 
+        /* Quiz Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .quiz-details h3 {
+            color: #5883d9;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        .quiz-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-info p {
+            margin: 8px 0;
+        }
+
+        .response-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .response-item .question {
+            color: #495057;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .response-item .answer {
+            color: #28a745;
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        /* Action Buttons */
+        .view-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .view-btn:hover {
+            background: #138496;
+        }
+
+        .export-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .export-btn:hover {
+            background: #218838;
+        }
+
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .main-container {
@@ -620,6 +737,11 @@ try {
                 font-size: 16px;
             }
 
+            .navbar-logo {
+                height: 32px;
+                margin-right: 10px;
+            }
+
             .username {
                 font-size: 14px;
             }
@@ -661,7 +783,8 @@ try {
     <nav class="navbar">
         <div style="display: flex; align-items: center;">
             <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
-            <h1>WebSankalp Admin Dashboard</h1>
+            <img src="../assets/images/websankapl_logo.png" alt="WebSankalp Logo" class="navbar-logo">
+        
         </div>
         <div class="user-info">
             <span class="username">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
@@ -688,10 +811,10 @@ try {
                     Interested Users
                     <span class="tab-count"><?php echo $totalContacts; ?></span>
                 </button>
-                <button class="sidebar-tab" onclick="switchTab('inquiries-tab', this)">
-                    <span class="tab-icon">📋</span>
-                    Product Inquiries
-                    <span class="tab-count"><?php echo $totalInquiries ?? 0; ?></span>
+                <button class="sidebar-tab" onclick="switchTab('quiz-tab', this)">
+                    <span class="tab-icon">❓</span>
+                    Quiz Responses
+                    <span class="tab-count"><?php echo $totalQuizResponses ?? 0; ?></span>
                 </button>
             </div>
         </div>
@@ -871,80 +994,58 @@ try {
             <?php endif; ?>
         </div>
 
-        <!-- Product Inquiries Tab -->
-        <div id="inquiries-tab" class="tab-content">
+        <!-- Quiz Responses Tab -->
+        <div id="quiz-tab" class="tab-content">
             <div class="section-header">
-                <h3>Product Inquiries</h3>
-                <button class="pdf-btn" onclick="generateInquiryPDF()">📄 Export PDF</button>
+                <h3>Quiz Responses</h3>
+                <div class="filter-section">
+                    <label for="quiz-filter">Filter by:</label>
+                    <select id="quiz-filter" onchange="filterQuizByDate()">
+                        <option value="all" <?php echo $dateFilter === 'all' ? 'selected' : ''; ?>>All Time</option>
+                        <option value="today" <?php echo $dateFilter === 'today' ? 'selected' : ''; ?>>Today</option>
+                        <option value="this_week" <?php echo $dateFilter === 'this_week' ? 'selected' : ''; ?>>This Week</option>
+                        <option value="this_month" <?php echo $dateFilter === 'this_month' ? 'selected' : ''; ?>>This Month</option>
+                        <option value="last_month" <?php echo $dateFilter === 'last_month' ? 'selected' : ''; ?>>Last Month</option>
+                        <option value="last_3_months" <?php echo $dateFilter === 'last_3_months' ? 'selected' : ''; ?>>Last 3 Months</option>
+                    </select>
+                    <span class="total-count">Total: <?php echo $totalQuizResponses; ?> responses</span>
+                </div>
             </div>
             
-            <!-- Date Filter -->
-            <div class="filter-section">
-                <label for="inquiryDateFilter">Filter by Date:</label>
-                <select id="inquiryDateFilter" onchange="filterInquiries()">
-                    <option value="all" <?php echo $dateFilter === 'all' ? 'selected' : ''; ?>>All Time</option>
-                    <option value="today" <?php echo $dateFilter === 'today' ? 'selected' : ''; ?>>Today</option>
-                    <option value="this_week" <?php echo $dateFilter === 'this_week' ? 'selected' : ''; ?>>This Week</option>
-                    <option value="this_month" <?php echo $dateFilter === 'this_month' ? 'selected' : ''; ?>>This Month</option>
-                    <option value="last_month" <?php echo $dateFilter === 'last_month' ? 'selected' : ''; ?>>Last Month</option>
-                    <option value="last_3_months" <?php echo $dateFilter === 'last_3_months' ? 'selected' : ''; ?>>Last 3 Months</option>
-                </select>
-                <span class="total-count">Total Inquiries: <?php echo $totalInquiries ?? 0; ?></span>
-            </div>
-
-            <?php if (isset($inquiry_error)): ?>
+            <?php if (isset($quiz_error)): ?>
                 <div style="background: #f8d7da; color: #721c24; padding: 12px; border-radius: 5px; margin-bottom: 20px;">
-                    <strong>Error:</strong> <?php echo htmlspecialchars($inquiry_error); ?>
-                    <br><small>Run this SQL command in phpMyAdmin to create the table:</small>
-                    <div style="background: #f1f3f4; padding: 10px; border-radius: 3px; margin-top: 10px; font-family: monospace; font-size: 12px;">
-CREATE TABLE `product_inquiries` (<br>
-&nbsp;&nbsp;`id` int(11) NOT NULL AUTO_INCREMENT,<br>
-&nbsp;&nbsp;`customer_name` varchar(100) NOT NULL,<br>
-&nbsp;&nbsp;`customer_phone` varchar(20) NOT NULL,<br>
-&nbsp;&nbsp;`customer_email` varchar(100) NOT NULL,<br>
-&nbsp;&nbsp;`company_name` varchar(100) DEFAULT NULL,<br>
-&nbsp;&nbsp;`products_interested` text DEFAULT NULL,<br>
-&nbsp;&nbsp;`use_case` varchar(100) DEFAULT NULL,<br>
-&nbsp;&nbsp;`budget_range` varchar(50) DEFAULT NULL,<br>
-&nbsp;&nbsp;`timeline` varchar(50) DEFAULT NULL,<br>
-&nbsp;&nbsp;`additional_requirements` text DEFAULT NULL,<br>
-&nbsp;&nbsp;`created_at` timestamp NOT NULL DEFAULT current_timestamp(),<br>
-&nbsp;&nbsp;PRIMARY KEY (`id`)<br>
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-                    </div>
+                    <?php echo htmlspecialchars($quiz_error); ?>
                 </div>
             <?php endif; ?>
 
-            <?php if (!empty($productInquiries)): ?>
+            <?php if (!empty($quizResponses)): ?>
                 <div class="table-wrapper">
                     <table class="admin-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Customer Name</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th>Company</th>
-                                <th>Products Interest</th>
-                                <th>Use Case</th>
-                                <th>Budget Range</th>
-                                <th>Timeline</th>
-                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Quiz Type</th>
+                                <th>Responses</th>
+                                <th>Submitted At</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($productInquiries as $inquiry): ?>
+                            <?php foreach ($quizResponses as $response): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($inquiry['id']); ?></td>
-                                <td><?php echo htmlspecialchars($inquiry['customer_name']); ?></td>
-                                <td><a href="tel:<?php echo htmlspecialchars($inquiry['customer_phone']); ?>"><?php echo htmlspecialchars($inquiry['customer_phone']); ?></a></td>
-                                <td><a href="mailto:<?php echo htmlspecialchars($inquiry['customer_email']); ?>"><?php echo htmlspecialchars($inquiry['customer_email']); ?></a></td>
-                                <td><?php echo htmlspecialchars($inquiry['company_name'] ?: 'N/A'); ?></td>
-                                <td title="<?php echo htmlspecialchars($inquiry['products_interested']); ?>"><?php echo htmlspecialchars(strlen($inquiry['products_interested']) > 30 ? substr($inquiry['products_interested'], 0, 30) . '...' : $inquiry['products_interested']); ?></td>
-                                <td><?php echo htmlspecialchars($inquiry['use_case']); ?></td>
-                                <td><?php echo htmlspecialchars($inquiry['budget_range'] ?: 'Not specified'); ?></td>
-                                <td><?php echo htmlspecialchars($inquiry['timeline'] ?: 'Not specified'); ?></td>
-                                <td><?php echo date('M j, Y g:i A', strtotime($inquiry['created_at'])); ?></td>
+                                <td><?php echo htmlspecialchars($response['id']); ?></td>
+                                <td><?php echo htmlspecialchars($response['name']); ?></td>
+                                <td><a href="tel:<?php echo htmlspecialchars($response['mobile']); ?>"><?php echo htmlspecialchars($response['mobile']); ?></a></td>
+                                <td><?php echo htmlspecialchars($response['quiz_type']); ?></td>
+                                <td>
+                                    <button onclick="viewQuizDetails(<?php echo $response['id']; ?>)" class="view-btn">View Details</button>
+                                </td>
+                                <td><?php echo date('M j, Y g:i A', strtotime($response['created_at'])); ?></td>
+                                <td>
+                                    <button onclick="exportQuizToPDF(<?php echo $response['id']; ?>)" class="export-btn">Export PDF</button>
+                                </td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -952,13 +1053,24 @@ CREATE TABLE `product_inquiries` (<br>
                 </div>
             <?php else: ?>
                 <div class="no-data">
-                    <p>No product inquiries found 
+                    <p>No quiz responses found 
                         <?php if ($dateFilter !== 'all'): ?>
                             for <?php echo str_replace('_', ' ', $dateFilter); ?>
                         <?php endif; ?>
                     </p>
                 </div>
             <?php endif; ?>
+        </div>
+
+        <!-- Quiz Details Modal -->
+        <div id="quizModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeQuizModal()">&times;</span>
+                <h2>Quiz Response Details</h2>
+                <div id="quizDetailsContent">
+                    <!-- Quiz details will be loaded here -->
+                </div>
+            </div>
         </div>
         
         </div> <!-- End dashboard-content -->
@@ -1030,16 +1142,7 @@ CREATE TABLE `product_inquiries` (<br>
             window.open(pdfUrl, '_blank');
         }
 
-        function generateInquiryPDF() {
-            const dateFilter = document.getElementById('inquiryDateFilter').value;
-            const url = `../backend/generate_inquiry_pdf.php?date_filter=${dateFilter}`;
-            window.open(url, '_blank');
-        }
 
-        function filterInquiries() {
-            const dateFilter = document.getElementById('inquiryDateFilter').value;
-            window.location.href = `dashboard.php?date_filter=${dateFilter}#inquiries-tab`;
-        }
         
         // Initialize dashboard on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -1087,6 +1190,92 @@ CREATE TABLE `product_inquiries` (<br>
         // Add scroll indicators on window resize
         window.addEventListener('resize', addTableScrollIndicator);
         window.addEventListener('load', addTableScrollIndicator);
+
+        // Quiz-specific functions
+        function filterQuizByDate() {
+            const dateFilter = document.getElementById('quiz-filter').value;
+            window.location.href = `dashboard.php?date_filter=${dateFilter}#quiz-tab`;
+        }
+
+        function viewQuizDetails(quizId) {
+            fetch(`../backend/get_quiz_details.php?id=${quizId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayQuizDetails(data.quiz);
+                    } else {
+                        alert('Error loading quiz details: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to load quiz details');
+                });
+        }
+
+        function displayQuizDetails(quiz) {
+            let content = `
+                <div class="quiz-details">
+                    <h3>${quiz.quiz_title}</h3>
+                    <div class="quiz-info">
+                        <p><strong>Name:</strong> ${quiz.name}</p>
+                        <p><strong>Mobile:</strong> <a href="tel:${quiz.mobile}">${quiz.mobile}</a></p>
+                        <p><strong>Quiz Type:</strong> ${quiz.quiz_type}</p>
+                        <p><strong>Submitted:</strong> ${new Date(quiz.created_at).toLocaleString()}</p>
+                    </div>
+                    <div class="quiz-responses">
+                        <h4>Responses:</h4>
+            `;
+
+            for (let i = 1; i <= 9; i++) {
+                const question = quiz[`question_${i}`];
+                const answer = quiz[`answer_${i}`];
+                if (question && answer) {
+                    content += `
+                        <div class="response-item">
+                            <p class="question"><strong>Q${i}:</strong> ${question}</p>
+                            <p class="answer"><strong>A:</strong> ${answer}</p>
+                        </div>
+                    `;
+                }
+            }
+
+            content += `
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('quizDetailsContent').innerHTML = content;
+            document.getElementById('quizModal').style.display = 'flex';
+        }
+
+        function closeQuizModal() {
+            document.getElementById('quizModal').style.display = 'none';
+        }
+
+        function exportQuizToPDF(quizId) {
+            // Open the PDF generation page in a new window
+            const pdfWindow = window.open(`../backend/generate_quiz_pdf.php?id=${quizId}&auto_print=1`, '_blank');
+            
+            // Optional: Show a loading message
+            const originalText = event.target.textContent;
+            event.target.textContent = 'Generating PDF...';
+            event.target.disabled = true;
+            
+            // Re-enable button after a delay
+            setTimeout(() => {
+                event.target.textContent = originalText;
+                event.target.disabled = false;
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('quizModal');
+            if (e.target === modal) {
+                closeQuizModal();
+            }
+        });
     </script>
 </body>
 </html>
