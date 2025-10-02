@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - WebSankalp Technologies</title>
+    <meta name="description" content="Get in touch with WebSankalp Technologies. Find our addresses in Pune, phone numbers, email, and a contact form to reach us.">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- navbar -->
+    <header class="main-header">
+        <div class="container">
+            <a href="../index.html" class="logo">
+                <img src="../assets/images/websankapl_logo.png" alt="WebSankalp Technologies" class="logo-img">
+            </a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                     <li><a href="product.html">Products</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-contact">
+                <div class="contact-item">
+                    <span class="contact-icon">📞</span>
+                    <a href="tel:+919326825895">+91 9326825895</a>
+                    <small>Get in touch with us</small>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">✉️</span>
+                    <a href="mailto:info@websankalp.com?subject=Inquiry from WebSankalp Website" target="_self">info@websankalp.com</a>
+                    <small>Send us an e-mail</small>
+                </div>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+<!-- navbar -->
+    <main>
+        <!-- Product Detail Section (Hidden by default) -->
+        <section id="product-detail-section" class="section-padding product-detail-section" style="display: none;">
+            <div class="container">
+                <div class="product-detail-container">
+                    <button id="back-to-contact" class="btn btn-secondary" style="margin-bottom: 2rem;">← Back to Contact</button>
+                    
+                    <div class="product-detail-content">
+                        <div class="product-detail-image">
+                            <img id="product-detail-img" src="" alt="Product Image" class="detail-img">
+                        </div>
+                        
+                        <div class="product-detail-info">
+                            <div class="product-detail-header">
+                                <span id="product-detail-brand" class="product-brand"></span>
+                                <h1 id="product-detail-model" class="product-model"></h1>
+                                <p id="product-detail-series" class="product-series"></p>
+                                <span id="product-detail-category" class="product-category-badge"></span>
+                            </div>
+                            
+                            <div class="product-detail-features">
+                                <h3>Key Features</h3>
+                                <ul id="product-detail-features-list" class="features-list">
+                                </ul>
+                            </div>
+                            
+                            <div class="product-detail-specifications">
+                                <h3>Product Specifications</h3>
+                                <div class="specs-grid">
+                                    <div class="spec-item">
+                                        <strong>Brand:</strong> <span id="spec-brand"></span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <strong>Model:</strong> <span id="spec-model"></span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <strong>Series:</strong> <span id="spec-series"></span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <strong>Category:</strong> <span id="spec-category"></span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <strong>Type:</strong> <span id="spec-subtype"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="product-actions">
+                                <a href="#contact-form" class="btn btn-primary">Get Quote</a>
+                                <a href="tel:09326825895" class="btn btn-secondary">Call Now</a>
+                                <button id="go-official-btn" class="btn btn-accent">Go Official</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Go Official Popup Modal -->
+        <div id="official-popup-modal" class="popup-modal" style="display: none;">
+            <div class="popup-content">
+                <div class="popup-header">
+                    <h3>Contact for Official Product</h3>
+                    <button class="popup-close">&times;</button>
+                </div>
+                <form id="official-popup-form" class="popup-form">
+                    <div class="form-group">
+                        <label for="popup-name">Name *</label>
+                        <input type="text" id="popup-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="popup-phone">Phone *</label>
+                        <input type="tel" id="popup-phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="popup-email">Email *</label>
+                        <input type="email" id="popup-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="popup-message">Message</label>
+                        <textarea id="popup-message" name="message" rows="4" placeholder="I'm interested in this product..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit & Go Official</button>
+                </form>
+            </div>
+        </div>
+
+        <section class="page-header">
+            <div class="container">
+                <h1 id="contact-main-title">Get In Touch</h1>
+            </div>
+        </section>
+
+        <section class="section-padding">
+            <div class="container">
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h3>Contact Information</h3>
+                        <p>We're here to help and answer any question you might have. We look forward to hearing from you.</p>
+                        
+                        <div class="info-item">
+                            <h4>Registered Office</h4>
+                            <p>E-104, Savali Homes, Survey No 153, Uruli Devachi, Pune - 412308</p>
+                        </div>
+
+                        <div class="info-item">
+                            <h4>Sales Office</h4>
+                            <p>A701, Fortuna Society, Dhayari, Pune - 411041</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4>Phone</h4>
+                            <p>09326825895 / 08007226877</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4>Email</h4>
+                            <p><a href="mailto:info@websankalp.com?subject=Inquiry from WebSankalp Website" target="_self">info@websankalp.com</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-container">
+                        <h3>Send us a Message</h3>
+                        <form id="contact-form" class="contact-form">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="mobile">Mobile</label>
+                                <input type="text" id="mobile" name="mobile" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="contact-submit-btn">Send Message</button>
+                        </form>
+                        
+                        <!-- Success/Error Message Display -->
+                        <div id="contact-message" class="contact-message" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="map-section">
+             <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d121059.04362244208!2d73.79292693527582!3d18.524603544403957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf2e67461101%3A0x828d43bf9d9ee343!2sPune%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1661872895449!5m2!1sen!2sin"
+                width="100%" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Google Map of Pune">
+            </iframe>
+        </section>
+
+    </main>
+ <!-- ------------------------------------------------footer ------------------------------------------------------>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <strong><h4><span class="red-letter">W</span>ebSankalp <span class="red-letter">T</span>echnologies</h4></strong>
+                    
+                      <div class="profile-section">
+                       
+                        <div class="profile-info" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                         <a href="../admin/login.php">   <img src="../assets/satish sir image/satish_sir.jpg" alt="CEO Profile" class="profile-img" style="margin: 0 auto 10px auto;"></a> 
+                            <h5 style="margin: 5px 0; text-align: center;">Satish Sutar </h5>
+                            <span style="text-align: center;">CEO & Founder - WST</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                       <li><a href="product.html">Products</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact Us</h4>
+                    <p>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/></svg>
+                        09326825895 / 08007226877
+                    </p>
+                    <p>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/></svg>
+                        <a href="mailto:info@websankalp.com?subject=Inquiry from WebSankalp Website" target="_self">info@websankalp.com</a>
+                    </p>
+                    
+                    <div class="qr-code-section" style="margin-top: 20px; text-align: center;">
+                        <img src="../assets/satish sir image/scanner.png" alt="WebSankalp QR Code" style="width: 120px; height: 120px; border: 2px solid #ddd; border-radius: 8px; background: white; padding: 8px;">
+                        <p style="font-size: 0.85rem; margin-top: 8px; color: #666;">Scan QR Code </p>
+                    </div>
+                </div>
+              
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 WebSankalp Technologies. All Rights Reserved.</p>
+                 </div>
+        </div>
+    </footer>
+
+    <!-- ------------------------------------------------footer ------------------------------------------------------>
+       
+    <button id="scrollToTopBtn" title="Go to top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/><path fill-rule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/></svg>
+    </button>
+    
+    <script src="../js/script.js" defer></script>
+</body>
+</html>
